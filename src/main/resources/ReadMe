@@ -1,0 +1,112 @@
+📌 Reward Points Calculation Logic
+For every $1 spent over $100 → 2 points
+For every $1 spent between $50–100 → 1 point
+For transactions below $50 → 0 points
+
+Examples:
+Transaction of $120 → (50 × 1) + (20 × 2) = 90 points
+Transaction of $75 → (25 × 1) = 25 points
+
+
+src/main/java/com/infy/customerRewards/
+
+├── controller/
+│   └── RewardController.java          # REST API endpoints
+├── service/
+│   └── RewardService.java             # Service interface
+├── serviceImpl/
+│   └── RewardServiceImpl.java         # Service implementation
+├── entity/
+│   ├── Customer.java                  # Customer entity
+│   └── Transaction.java               # Transaction entity
+├── repository/
+│   ├── CustomerRepository.java        # Customer data access
+│   └── TransactionRepository.java     # Transaction data access
+├── dto/
+│   ├── CustomerDTO.java               # Customer data transfer object
+│   ├── CustomerResponseDTO.java       # Customer response DTO
+│   ├── TransactionDTO.java            # Transaction DTO
+│   ├── RewardResponseDTO.java         # Reward response DTO
+│   └── MonthlyRewardDTO.java          # Monthly reward breakdown DTO
+└── utility/
+    └── RewardCalculator.java          # Reward calculation logic
+    
+    
+Java 8+
+Spring Boot - Application framework
+Spring Data JPA - Data persistence
+Spring Security - Security and password encoding
+ModelMapper - Object mapping
+Lombok - Code generation (optional)
+Maven - Dependency management
+
+API Endpoints
+
+1.Create Customer
+
+POST /api/rewards/customers
+Content-Type: application/json
+
+{
+  "custName": "John Doe",
+  "phoneNo": "1234567890",
+  "transactions": [
+    {
+      "date": "2024-01-15",
+      "product": "Laptop",
+      "amount": 150.0
+    }
+  ]
+}
+
+2.Get Customer Transactions
+
+GET /api/rewards/customers/{customerId}/transactions
+
+3. Get Customer Rewards
+
+GET /api/rewards/customers/{customerId}/rewards?startDate=2024-01-01&endDate=2024-12-31
+
+Reward Response Example
+
+{
+  "customerId": 1,
+  "custName": "John Doe",
+  "phoneNo": "encoded_phone_number",
+  "transactions": [
+    {
+      "id": 1,
+      "date": "2024-01-15",
+      "product": "Laptop",
+      "amount": 150.0,
+      "rewardPoints": 150
+    }
+  ],
+  "monthlyRewards": [
+    {
+      "year": 2024,
+      "month": "January",
+      "points": 150
+    }
+  ],
+  "totalRewards": 150,
+  "timeFrame": {
+    "startDate": "2024-01-01",
+    "endDate": "2024-12-31"
+  }
+}
+
+Application Properties
+properties
+# Database configuration
+spring.datasource.url=jdbc:mysql://localhost:3306/rewards_db
+spring.datasource.username=root
+spring.datasource.password=root
+
+# JPA configuration
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+# Custom messages
+customer.notfound=Customer not found
+transaction.notfound=No transactions found in the system
